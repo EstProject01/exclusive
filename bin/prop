@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstdlib>
+#include <unistd.h>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <thread>
+#include <chrono>
+
+class CommandExecutor {
+public:
+    static void executeCommand(const std::string& command) {
+        int result = system(command.c_str());
+
+        if (result == -1) {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            perror("Kesalahan mengeksekusi perintah");
+            exit(EXIT_FAILURE);
+        }
+    }
+};
+
+int main() {
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // Properti dan nilainya untuk setprop
+    const char *propProperties[] = {"debug.performance.tuning", "debug.egl.force", "debug.cpu.vsync", "debug.gpu.vsync"};
+    const char *propValues[] = {"1", "1", "false", "false"};
+
+    // Pengaturan dan nilainya untuk settings put
+    const char *settingNames[] = {"secure long_press_timeout", "secure multi_press_timeout"};
+    const char *settingValues[] = {"100", "100"};
+
+    int numProperties = sizeof(propProperties) / sizeof(propProperties[0]);
+    int numSettings = sizeof(settingNames) / sizeof(settingNames[0]);
+
+    // Mengeksekusi perintah setprop untuk setiap pasangan properti-nilai
+    for (int i = 0; i < numProperties; ++i) {
+        const std::string propCommand = "setprop " + std::string(propProperties[i]) + " " + std::string(propValues[i]);
+        CommandExecutor::executeCommand(propCommand);
+    }
+
+    // Mengeksekusi perintah settings put untuk setiap pasangan pengaturan-nilai
+    for (int i = 0; i < numSettings; ++i) {
+        const std::string settingCommand = "settings put " + std::string(settingNames[i]) + " " + std::string(settingValues[i]);
+        CommandExecutor::executeCommand(settingCommand);
+    }
+
+    return EXIT_SUCCESS;
+}
