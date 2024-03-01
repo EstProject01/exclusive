@@ -10,4 +10,8 @@ pkg install git
 
 step 3
 
-p
+cd /storage/emulated/0/
+
+step 4
+
+git clone 
