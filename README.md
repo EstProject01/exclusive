@@ -14,4 +14,4 @@ cd /storage/emulated/0/
 
 step 4
 
-git clone 
+git clone https://github.com/EstProject01/exclusive
